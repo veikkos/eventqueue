@@ -65,3 +65,7 @@ Above prints
 ```
 
 See `tests/eventqueue-tests.cpp`.
+
+## Status
+
+[![Build Status](https://api.travis-ci.org/veikkos/eventqueue.svg?branch=public)](https://travis-ci.org/veikkos/eventqueue)
