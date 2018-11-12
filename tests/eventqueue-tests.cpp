@@ -113,7 +113,6 @@ TEST(EventQueue, Stress) {
     unsigned int altitude = initialAltitude;
     unsigned int r = rounds;
 
-    // Notify test thread that altitude thread is ready
     ++threadReady;
     cv.notify_all();
 
@@ -122,14 +121,63 @@ TEST(EventQueue, Stress) {
       cv.wait(lock, [&threadStart] { return threadStart.load(); });
     }
 
-    // Wait flooding permission from test thread
     while (r--) {
       altitudeProvider->update(Notification<unsigned int>(altitude++));
     }
 
     delete altitudeProvider;
 
-    // Notify test thread that altitude thread is done
+    ++threadDone;
+    cv.notify_all();
+  });
+
+  std::thread providerRegisterer([&, rounds] {
+    unsigned int r = rounds;
+
+    ++threadReady;
+    cv.notify_all();
+
+    {
+      std::unique_lock<std::mutex> lock(mutex);
+      cv.wait(lock, [&threadStart] { return threadStart.load(); });
+    }
+
+    while (r--) {
+      ResourceHandle<std::string, unsigned int> *tempProvider =
+          q.provide(ResourceAttr<std::string>("providerAttr"));
+
+      tempProvider->update(3u);
+
+      delete tempProvider;
+    }
+
+    ++threadDone;
+    cv.notify_all();
+  });
+
+  std::thread listenerRegisterer([&, rounds] {
+    unsigned int r = rounds;
+
+    ++threadReady;
+    cv.notify_all();
+
+    {
+      std::unique_lock<std::mutex> lock(mutex);
+      cv.wait(lock, [&threadStart] { return threadStart.load(); });
+    }
+
+    while (r--) {
+      ResourceListener<std::string, unsigned int> tempListener(
+          ResourceAttr<std::string>("listenerAttr"),
+          [](const Notification<unsigned int> &notification) {
+            EXPECT_TRUE(false);
+          });
+
+      q.listen(tempListener);
+
+      q.removeListener(tempListener);
+    }
+
     ++threadDone;
     cv.notify_all();
   });
@@ -137,7 +185,7 @@ TEST(EventQueue, Stress) {
   // Wait until threads are ready to start providing
   {
     std::unique_lock<std::mutex> lock(mutex);
-    cv.wait(lock, [&threadReady] { return threadReady == 2; });
+    cv.wait(lock, [&threadReady] { return threadReady == 4; });
   }
 
   // Notify threads that they are free to flood
@@ -147,7 +195,7 @@ TEST(EventQueue, Stress) {
   // Wait until threads signal that they are done
   {
     std::unique_lock<std::mutex> lock(mutex);
-    cv.wait(lock, [&threadDone] { return threadDone == 2; });
+    cv.wait(lock, [&threadDone] { return threadDone == 4; });
   }
 
   q.waitUntilEmpty();
@@ -157,6 +205,8 @@ TEST(EventQueue, Stress) {
 
   speedThread.join();
   altitudeThread.join();
+  providerRegisterer.join();
+  listenerRegisterer.join();
 
   EXPECT_EQ(rounds, speedNotifications);
   EXPECT_EQ(rounds, altitudeNotifications);
