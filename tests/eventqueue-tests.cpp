@@ -53,7 +53,9 @@ TEST(EventQueue, Stress) {
   std::atomic_bool threadStart(false);
   unsigned int speedNotifications = 0;
   unsigned int altitudeNotifications = 0;
-  const unsigned int rounds = 100;
+  const unsigned int rounds = 1000u;
+  const unsigned int initialSpeed = 1u;
+  const unsigned int initialAltitude = 2001u;
 
   EventQueue<std::string, unsigned int> q;
 
@@ -63,13 +65,14 @@ TEST(EventQueue, Stress) {
   ResourceListener<std::string, unsigned int> speedListener(
       speedAttr,
       [&speedNotifications](const Notification<unsigned int> &notification) {
-        ++speedNotifications;
+        EXPECT_EQ(speedNotifications++ + initialSpeed, notification.getData());
       });
 
   ResourceListener<std::string, unsigned int> altitudeListener(
       altitudeAttr,
       [&altitudeNotifications](const Notification<unsigned int> &notification) {
-        ++altitudeNotifications;
+        EXPECT_EQ(altitudeNotifications++ + initialAltitude,
+                  notification.getData());
       });
 
   q.listen(speedListener);
@@ -79,7 +82,7 @@ TEST(EventQueue, Stress) {
     ResourceHandle<std::string, unsigned int> *speedProvider =
         q.provide(speedAttr);
 
-    unsigned int speed = 1u;
+    unsigned int speed = initialSpeed;
     unsigned int r = rounds;
 
     // Notify test thread that speed thread is ready
@@ -107,7 +110,7 @@ TEST(EventQueue, Stress) {
     ResourceHandle<std::string, unsigned int> *altitudeProvider =
         q.provide(altitudeAttr);
 
-    unsigned int altitude = 2000u;
+    unsigned int altitude = initialAltitude;
     unsigned int r = rounds;
 
     // Notify test thread that altitude thread is ready
