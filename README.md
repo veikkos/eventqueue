@@ -1,8 +1,8 @@
 # veikkos' C++11 EventQueue
 
-Study project for threaded event queue written in C++11. The goal of the templated header only library is to allow messaging between several threads.
+Study project for threaded event queue written in C++11. The goal of the templated header only library is to allow easy messaging between several threads.
 
-Multiple threads can be used to feed data into EventQueue. EventQueue uses single internal thread for providing the data for listeners.
+Multiple threads can be used to feed data into EventQueue. EventQueue uses single internal thread for providing notifications to listeners.
 
 ## Getting started ##
 
@@ -14,8 +14,7 @@ Examples can be seen in gtest tests which uses CMake for generating project file
 $ mkdir build
 $ cd build
 $ cmake -G "Unix Makefiles" ..
-$ make
-$ ./tests/eventqueue-tests
+$ make tests
 ```
 
 ## Example usage ##
@@ -25,9 +24,8 @@ $ ./tests/eventqueue-tests
   // type (here string) and notification type (here unsigned int)
   EventQueue<std::string, unsigned int> q;
 
-  // Create message attributes identifying certain
-  // type of resource - use "speed" resource as an
-  // example
+  // Create message attributes identifying certain type of
+  // resource - use "speed" resource as an example
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
@@ -46,7 +44,7 @@ $ ./tests/eventqueue-tests
   handle->update(Notification<unsigned int>(98u));
   handle->update(Notification<unsigned int>(100u));
 
-  // Wait that queue is empty before destroying it
+  // Wait until queue is empty before destroying it
   q.waitUntilEmpty();
 
   // Retire listener

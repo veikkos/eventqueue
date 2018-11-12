@@ -13,9 +13,8 @@ TEST(EventQueue, Example) {
   // type (here string) and notification type (here unsigned int)
   EventQueue<std::string, unsigned int> q;
 
-  // Create message attributes identifying certain
-  // type of resource - use "speed" resource as an
-  // example
+  // Create message attributes identifying certain type of
+  // resource - use "speed" resource as an example
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
@@ -34,7 +33,7 @@ TEST(EventQueue, Example) {
   handle->update(Notification<unsigned int>(98u));
   handle->update(Notification<unsigned int>(100u));
 
-  // Wait that queue is empty before destroying it
+  // Wait until queue is empty before destroying it
   q.waitUntilEmpty();
 
   // Retire listener
