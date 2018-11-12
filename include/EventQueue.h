@@ -16,7 +16,7 @@
 
 template <typename A, typename T> class EventQueue {
 public:
-  EventQueue() : mThread([this] { processEntry(); }), mRunning(true){};
+  EventQueue() : mRunning(true), mThread([this] { processEntry(); }){};
 
   ~EventQueue() {
     mRunning = false;
@@ -101,6 +101,7 @@ private:
     }
   }
 
+  std::atomic_bool mRunning;
   std::queue<std::pair<ResourceAttr<A>, Notification<T>>> mQ;
   std::map<ResourceHandle<A, T> *, ResourceAttr<A>> mResourceHandles;
   std::vector<ResourceListener<A, T> *> mResourceListeners;
@@ -108,7 +109,6 @@ private:
   std::condition_variable mEventCv;
   std::mutex mEventMutex;
   std::mutex mListenerMutex;
-  std::atomic_bool mRunning;
 };
 
 #endif // EVENTQUEUE_H
