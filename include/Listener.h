@@ -6,7 +6,7 @@
 
 #include <functional>
 
-namespace EventQueue {
+namespace EQ {
 
 template <typename A, typename T> class EventQueue;
 

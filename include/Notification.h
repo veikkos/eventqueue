@@ -1,7 +1,7 @@
 #ifndef NOTIFICATION_H
 #define NOTIFICATION_H
 
-namespace EventQueue {
+namespace EQ {
 
 template <typename T> class Notification {
 public:

@@ -14,7 +14,7 @@
 #include <thread>
 #include <vector>
 
-namespace EventQueue {
+namespace EQ {
 
 template <typename A, typename T> class EventQueue {
 public:

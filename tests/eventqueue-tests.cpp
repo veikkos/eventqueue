@@ -9,7 +9,7 @@
 
 #include "gtest/gtest.h"
 
-using namespace EventQueue;
+using namespace EQ;
 
 TEST(EventQueue, Example) {
   // Instantiate EventQueue and select resource identification

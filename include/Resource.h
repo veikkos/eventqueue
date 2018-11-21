@@ -3,7 +3,7 @@
 
 #include "Notification.h"
 
-namespace EventQueue {
+namespace EQ {
 
 template <typename A, typename T> class EventQueue;
 

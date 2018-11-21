@@ -1,7 +1,7 @@
 #ifndef ATTRIBUTES_H
 #define ATTRIBUTES_H
 
-namespace EventQueue {
+namespace EQ {
 
 template <typename T> class Attributes {
 public:
