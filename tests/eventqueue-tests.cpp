@@ -1,8 +1,8 @@
-#include "EventQueue.h"
-#include "Notification.h"
 #include "Attributes.h"
-#include "Resource.h"
+#include "EventQueue.h"
 #include "Listener.h"
+#include "Notification.h"
+#include "Resource.h"
 
 #include <iostream>
 #include <string>
@@ -81,8 +81,7 @@ TEST(EventQueue, Stress) {
   q.listen(altitudeListener);
 
   std::thread speedThread([&, rounds] {
-    auto *speedProvider =
-        q.provide(speedAttr);
+    auto *speedProvider = q.provide(speedAttr);
 
     unsigned int speed = initialSpeed;
     unsigned int r = rounds;
@@ -109,8 +108,7 @@ TEST(EventQueue, Stress) {
   });
 
   std::thread altitudeThread([&, rounds] {
-    auto *altitudeProvider =
-        q.provide(altitudeAttr);
+    auto *altitudeProvider = q.provide(altitudeAttr);
 
     unsigned int altitude = initialAltitude;
     unsigned int r = rounds;
@@ -145,8 +143,7 @@ TEST(EventQueue, Stress) {
     }
 
     while (r--) {
-      auto *tempProvider =
-          q.provide(Attributes<std::string>("providerAttr"));
+      auto *tempProvider = q.provide(Attributes<std::string>("providerAttr"));
 
       tempProvider->update(3u);
 
