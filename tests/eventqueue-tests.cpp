@@ -18,7 +18,7 @@ TEST(EventQueue, Example) {
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
-  auto *handle = q.provide(attr);
+  auto *resource = q.provide(attr);
 
   // Create listener which listens to "speed"
   ResourceListener<std::string, unsigned int> listener(
@@ -30,8 +30,8 @@ TEST(EventQueue, Example) {
   q.listen(listener);
 
   // Provider few values for the listener(s)
-  handle->update(Notification<unsigned int>(98u));
-  handle->update(Notification<unsigned int>(100u));
+  resource->update(Notification<unsigned int>(98u));
+  resource->update(Notification<unsigned int>(100u));
 
   // Wait until queue is empty before destroying it
   q.waitUntilEmpty();
@@ -41,7 +41,7 @@ TEST(EventQueue, Example) {
 
   // Delete provider. This removes the provider automatically
   // from queue's bookkeeping
-  delete handle;
+  delete resource;
 }
 
 TEST(EventQueue, Stress) {
