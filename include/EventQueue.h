@@ -14,6 +14,8 @@
 #include <thread>
 #include <vector>
 
+namespace EventQueue {
+
 template <typename A, typename T> class EventQueue {
 public:
   EventQueue() : mRunning(true), mThread([this] { processEntry(); }){};
@@ -109,5 +111,6 @@ private:
   std::mutex mEventMutex;
   std::mutex mListenerMutex;
 };
+}
 
 #endif // EVENTQUEUE_H

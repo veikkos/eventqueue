@@ -3,6 +3,8 @@
 
 #include "Notification.h"
 
+namespace EventQueue {
+
 template <typename A, typename T> class EventQueue;
 
 template <typename A, typename T> class Resource {
@@ -19,5 +21,6 @@ private:
 
   EventQueue<A, T> *mQ;
 };
+}
 
 #endif // RESOURCE_H

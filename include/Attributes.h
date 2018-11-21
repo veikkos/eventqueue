@@ -1,6 +1,8 @@
 #ifndef ATTRIBUTES_H
 #define ATTRIBUTES_H
 
+namespace EventQueue {
+
 template <typename T> class Attributes {
 public:
   Attributes(const T &resourceId) : mResourceId(resourceId) {}
@@ -10,5 +12,6 @@ public:
 private:
   T mResourceId;
 };
+}
 
 #endif // ATTRIBUTES_H

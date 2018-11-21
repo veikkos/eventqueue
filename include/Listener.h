@@ -6,6 +6,8 @@
 
 #include <functional>
 
+namespace EventQueue {
+
 template <typename A, typename T> class EventQueue;
 
 template <typename A, typename T> class Listener {
@@ -24,5 +26,6 @@ private:
   Attributes<A> mAttr;
   OnNotify mOnNotify;
 };
+}
 
 #endif // LISTENER_H

@@ -9,6 +9,8 @@
 
 #include "gtest/gtest.h"
 
+using namespace EventQueue;
+
 TEST(EventQueue, Example) {
   // Instantiate EventQueue and select resource identification
   // type (here string) and notification type (here unsigned int)

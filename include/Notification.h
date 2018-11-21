@@ -1,6 +1,8 @@
 #ifndef NOTIFICATION_H
 #define NOTIFICATION_H
 
+namespace EventQueue {
+
 template <typename T> class Notification {
 public:
   Notification(const T &data) : mData(data) {}
@@ -10,5 +12,6 @@ public:
 private:
   T mData;
 };
+}
 
 #endif // NOTIFICATION_H
