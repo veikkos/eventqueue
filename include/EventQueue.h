@@ -1,9 +1,9 @@
 #ifndef EVENTQUEUE_H
 #define EVENTQUEUE_H
 
+#include "Attributes.h"
 #include "Listener.h"
 #include "Resource.h"
-#include "ResourceAttr.h"
 
 #include <algorithm>
 #include <atomic>
@@ -24,7 +24,7 @@ public:
     mThread.join();
   }
 
-  Resource<A, T> *provide(const ResourceAttr<A> &attr) {
+  Resource<A, T> *provide(const Attributes<A> &attr) {
     auto handle = new Resource<A, T>(this);
 
     std::lock_guard<std::mutex> guard(mEventMutex);
@@ -101,8 +101,8 @@ private:
   }
 
   std::atomic_bool mRunning;
-  std::queue<std::pair<ResourceAttr<A>, Notification<T>>> mQ;
-  std::map<Resource<A, T> *, ResourceAttr<A>> mResources;
+  std::queue<std::pair<Attributes<A>, Notification<T>>> mQ;
+  std::map<Resource<A, T> *, Attributes<A>> mResources;
   std::vector<Listener<A, T> *> mListeners;
   std::thread mThread;
   std::condition_variable mEventCv;

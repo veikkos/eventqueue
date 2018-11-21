@@ -26,7 +26,7 @@ $ make tests
 
   // Create message attributes identifying certain type of
   // resource - use "speed" resource as an example
-  const ResourceAttr<std::string> attr("speed");
+  const Attributes<std::string> attr("speed");
 
   // Create a resource which provides "speed"
   auto *resource = q.provide(attr);

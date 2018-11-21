@@ -1,6 +1,6 @@
 #include "EventQueue.h"
 #include "Notification.h"
-#include "ResourceAttr.h"
+#include "Attributes.h"
 #include "Resource.h"
 #include "Listener.h"
 
@@ -16,7 +16,7 @@ TEST(EventQueue, Example) {
 
   // Create message attributes identifying certain type of
   // resource - use "speed" resource as an example
-  const ResourceAttr<std::string> attr("speed");
+  const Attributes<std::string> attr("speed");
 
   // Create a resource which provides "speed"
   auto *resource = q.provide(attr);
@@ -59,8 +59,8 @@ TEST(EventQueue, Stress) {
 
   EventQueue<std::string, unsigned int> q;
 
-  const ResourceAttr<std::string> speedAttr("speed");
-  const ResourceAttr<std::string> altitudeAttr("altitude");
+  const Attributes<std::string> speedAttr("speed");
+  const Attributes<std::string> altitudeAttr("altitude");
 
   Listener<std::string, unsigned int> speedListener(
       speedAttr,
@@ -144,7 +144,7 @@ TEST(EventQueue, Stress) {
 
     while (r--) {
       auto *tempProvider =
-          q.provide(ResourceAttr<std::string>("providerAttr"));
+          q.provide(Attributes<std::string>("providerAttr"));
 
       tempProvider->update(3u);
 
@@ -168,7 +168,7 @@ TEST(EventQueue, Stress) {
 
     while (r--) {
       Listener<std::string, unsigned int> tempListener(
-          ResourceAttr<std::string>("listenerAttr"),
+          Attributes<std::string>("listenerAttr"),
           [](const Notification<unsigned int> &notification) {
             EXPECT_TRUE(false);
           });
