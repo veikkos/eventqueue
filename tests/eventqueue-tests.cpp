@@ -18,7 +18,7 @@ TEST(EventQueue, Example) {
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
-  Resource<std::string, unsigned int> *handle = q.provide(attr);
+  auto *handle = q.provide(attr);
 
   // Create listener which listens to "speed"
   ResourceListener<std::string, unsigned int> listener(
@@ -78,7 +78,7 @@ TEST(EventQueue, Stress) {
   q.listen(altitudeListener);
 
   std::thread speedThread([&, rounds] {
-    Resource<std::string, unsigned int> *speedProvider =
+    auto *speedProvider =
         q.provide(speedAttr);
 
     unsigned int speed = initialSpeed;
@@ -106,7 +106,7 @@ TEST(EventQueue, Stress) {
   });
 
   std::thread altitudeThread([&, rounds] {
-    Resource<std::string, unsigned int> *altitudeProvider =
+    auto *altitudeProvider =
         q.provide(altitudeAttr);
 
     unsigned int altitude = initialAltitude;
@@ -142,7 +142,7 @@ TEST(EventQueue, Stress) {
     }
 
     while (r--) {
-      Resource<std::string, unsigned int> *tempProvider =
+      auto *tempProvider =
           q.provide(ResourceAttr<std::string>("providerAttr"));
 
       tempProvider->update(3u);

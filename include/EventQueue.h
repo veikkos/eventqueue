@@ -1,8 +1,8 @@
 #ifndef EVENTQUEUE_H
 #define EVENTQUEUE_H
 
-#include "ResourceAttr.h"
 #include "Resource.h"
+#include "ResourceAttr.h"
 #include "ResourceListener.h"
 
 #include <algorithm>
@@ -60,8 +60,7 @@ public:
 
 private:
   friend Resource<A, T>;
-  void update(Resource<A, T> *resource,
-              const Notification<T> &notification) {
+  void update(Resource<A, T> *resource, const Notification<T> &notification) {
     std::unique_lock<std::mutex> lock(mEventMutex);
 
     auto it = mResources.find(resource);
