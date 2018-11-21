@@ -1,9 +1,9 @@
 #ifndef EVENTQUEUE_H
 #define EVENTQUEUE_H
 
+#include "Listener.h"
 #include "Resource.h"
 #include "ResourceAttr.h"
-#include "ResourceListener.h"
 
 #include <algorithm>
 #include <atomic>
@@ -39,18 +39,18 @@ public:
     mResources.erase(handle);
   }
 
-  void listen(ResourceListener<A, T> &listener) {
+  void listen(Listener<A, T> &listener) {
     std::lock_guard<std::mutex> guard(mListenerMutex);
 
-    mResourceListeners.push_back(&listener);
+    mListeners.push_back(&listener);
   }
 
-  void removeListener(ResourceListener<A, T> &listener) {
+  void removeListener(Listener<A, T> &listener) {
     std::lock_guard<std::mutex> guard(mListenerMutex);
 
-    mResourceListeners.erase(std::remove(mResourceListeners.begin(),
-                                         mResourceListeners.end(), &listener),
-                             mResourceListeners.end());
+    mListeners.erase(
+        std::remove(mListeners.begin(), mListeners.end(), &listener),
+        mListeners.end());
   }
 
   void waitUntilEmpty() {
@@ -88,7 +88,7 @@ private:
       {
         std::lock_guard<std::mutex> guard(mListenerMutex);
 
-        for (auto listener : mResourceListeners) {
+        for (auto listener : mListeners) {
           if (event.first.getResourceId() ==
               listener->getAttributes().getResourceId()) {
             listener->notify(event.second);
@@ -103,7 +103,7 @@ private:
   std::atomic_bool mRunning;
   std::queue<std::pair<ResourceAttr<A>, Notification<T>>> mQ;
   std::map<Resource<A, T> *, ResourceAttr<A>> mResources;
-  std::vector<ResourceListener<A, T> *> mResourceListeners;
+  std::vector<Listener<A, T> *> mListeners;
   std::thread mThread;
   std::condition_variable mEventCv;
   std::mutex mEventMutex;

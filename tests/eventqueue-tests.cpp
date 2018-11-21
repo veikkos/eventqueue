@@ -2,6 +2,7 @@
 #include "Notification.h"
 #include "ResourceAttr.h"
 #include "Resource.h"
+#include "Listener.h"
 
 #include <iostream>
 #include <string>
@@ -21,7 +22,7 @@ TEST(EventQueue, Example) {
   auto *resource = q.provide(attr);
 
   // Create listener which listens to "speed"
-  ResourceListener<std::string, unsigned int> listener(
+  Listener<std::string, unsigned int> listener(
       attr, [](const Notification<unsigned int> &notification) {
         std::cout << notification.getData() << std::endl;
       });
@@ -61,13 +62,13 @@ TEST(EventQueue, Stress) {
   const ResourceAttr<std::string> speedAttr("speed");
   const ResourceAttr<std::string> altitudeAttr("altitude");
 
-  ResourceListener<std::string, unsigned int> speedListener(
+  Listener<std::string, unsigned int> speedListener(
       speedAttr,
       [&speedNotifications](const Notification<unsigned int> &notification) {
         EXPECT_EQ(speedNotifications++ + initialSpeed, notification.getData());
       });
 
-  ResourceListener<std::string, unsigned int> altitudeListener(
+  Listener<std::string, unsigned int> altitudeListener(
       altitudeAttr,
       [&altitudeNotifications](const Notification<unsigned int> &notification) {
         EXPECT_EQ(altitudeNotifications++ + initialAltitude,
@@ -166,7 +167,7 @@ TEST(EventQueue, Stress) {
     }
 
     while (r--) {
-      ResourceListener<std::string, unsigned int> tempListener(
+      Listener<std::string, unsigned int> tempListener(
           ResourceAttr<std::string>("listenerAttr"),
           [](const Notification<unsigned int> &notification) {
             EXPECT_TRUE(false);

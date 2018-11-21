@@ -32,7 +32,7 @@ $ make tests
   auto *resource = q.provide(attr);
 
   // Create listener which listens to "speed"
-  ResourceListener<std::string, unsigned int> listener(
+  Listener<std::string, unsigned int> listener(
       attr, [](const Notification<unsigned int> &notification) {
         std::cout << notification.getData() << std::endl;
       });

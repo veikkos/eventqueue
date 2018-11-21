@@ -1,5 +1,5 @@
-#ifndef RESOURCELISTENER_H
-#define RESOURCELISTENER_H
+#ifndef LISTENER_H
+#define LISTENER_H
 
 #include "Notification.h"
 #include "ResourceAttr.h"
@@ -8,11 +8,11 @@
 
 template <typename A, typename T> class EventQueue;
 
-template <typename A, typename T> class ResourceListener {
+template <typename A, typename T> class Listener {
 public:
   using OnNotify = std::function<void(const Notification<T> &)>;
 
-  ResourceListener(const ResourceAttr<A> &attr, OnNotify onNotify)
+  Listener(const ResourceAttr<A> &attr, OnNotify onNotify)
       : mAttr(attr), mOnNotify(onNotify) {}
 
   const ResourceAttr<A> &getAttributes() const { return mAttr; }
@@ -25,4 +25,4 @@ private:
   OnNotify mOnNotify;
 };
 
-#endif // RESOURCELISTENER_H
+#endif // LISTENER_H
