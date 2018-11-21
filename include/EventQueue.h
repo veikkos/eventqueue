@@ -2,7 +2,7 @@
 #define EVENTQUEUE_H
 
 #include "ResourceAttr.h"
-#include "ResourceHandle.h"
+#include "Resource.h"
 #include "ResourceListener.h"
 
 #include <algorithm>
@@ -24,19 +24,19 @@ public:
     mThread.join();
   }
 
-  ResourceHandle<A, T> *provide(const ResourceAttr<A> &attr) {
-    auto handle = new ResourceHandle<A, T>(this);
+  Resource<A, T> *provide(const ResourceAttr<A> &attr) {
+    auto handle = new Resource<A, T>(this);
 
     std::lock_guard<std::mutex> guard(mEventMutex);
 
-    mResourceHandles.emplace(handle, attr);
+    mResources.emplace(handle, attr);
     return handle;
   }
 
-  void removeProvider(ResourceHandle<A, T> *handle) {
+  void removeProvider(Resource<A, T> *handle) {
     std::lock_guard<std::mutex> guard(mEventMutex);
 
-    mResourceHandles.erase(handle);
+    mResources.erase(handle);
   }
 
   void listen(ResourceListener<A, T> &listener) {
@@ -59,13 +59,13 @@ public:
   }
 
 private:
-  friend ResourceHandle<A, T>;
-  void update(ResourceHandle<A, T> *resourceHandle,
+  friend Resource<A, T>;
+  void update(Resource<A, T> *resource,
               const Notification<T> &notification) {
     std::unique_lock<std::mutex> lock(mEventMutex);
 
-    auto it = mResourceHandles.find(resourceHandle);
-    if (it != mResourceHandles.end()) {
+    auto it = mResources.find(resource);
+    if (it != mResources.end()) {
       mQ.push(std::make_pair(it->second, notification));
     }
 
@@ -103,7 +103,7 @@ private:
 
   std::atomic_bool mRunning;
   std::queue<std::pair<ResourceAttr<A>, Notification<T>>> mQ;
-  std::map<ResourceHandle<A, T> *, ResourceAttr<A>> mResourceHandles;
+  std::map<Resource<A, T> *, ResourceAttr<A>> mResources;
   std::vector<ResourceListener<A, T> *> mResourceListeners;
   std::thread mThread;
   std::condition_variable mEventCv;

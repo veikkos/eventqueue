@@ -1,7 +1,7 @@
 #include "EventQueue.h"
 #include "Notification.h"
 #include "ResourceAttr.h"
-#include "ResourceHandle.h"
+#include "Resource.h"
 
 #include <iostream>
 #include <string>
@@ -18,7 +18,7 @@ TEST(EventQueue, Example) {
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
-  ResourceHandle<std::string, unsigned int> *handle = q.provide(attr);
+  Resource<std::string, unsigned int> *handle = q.provide(attr);
 
   // Create listener which listens to "speed"
   ResourceListener<std::string, unsigned int> listener(
@@ -78,7 +78,7 @@ TEST(EventQueue, Stress) {
   q.listen(altitudeListener);
 
   std::thread speedThread([&, rounds] {
-    ResourceHandle<std::string, unsigned int> *speedProvider =
+    Resource<std::string, unsigned int> *speedProvider =
         q.provide(speedAttr);
 
     unsigned int speed = initialSpeed;
@@ -106,7 +106,7 @@ TEST(EventQueue, Stress) {
   });
 
   std::thread altitudeThread([&, rounds] {
-    ResourceHandle<std::string, unsigned int> *altitudeProvider =
+    Resource<std::string, unsigned int> *altitudeProvider =
         q.provide(altitudeAttr);
 
     unsigned int altitude = initialAltitude;
@@ -142,7 +142,7 @@ TEST(EventQueue, Stress) {
     }
 
     while (r--) {
-      ResourceHandle<std::string, unsigned int> *tempProvider =
+      Resource<std::string, unsigned int> *tempProvider =
           q.provide(ResourceAttr<std::string>("providerAttr"));
 
       tempProvider->update(3u);

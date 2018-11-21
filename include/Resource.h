@@ -1,13 +1,13 @@
-#ifndef RESOURCEHANDLE_H
-#define RESOURCEHANDLE_H
+#ifndef RESOURCE_H
+#define RESOURCE_H
 
 #include "Notification.h"
 
 template <typename A, typename T> class EventQueue;
 
-template <typename A, typename T> class ResourceHandle {
+template <typename A, typename T> class Resource {
 public:
-  ~ResourceHandle() { mQ->removeProvider(this); }
+  ~Resource() { mQ->removeProvider(this); }
 
   void update(const Notification<T> &notification) {
     mQ->update(this, notification);
@@ -15,9 +15,9 @@ public:
 
 private:
   friend EventQueue<A, T>;
-  ResourceHandle(EventQueue<A, T> *q) : mQ(q) {}
+  Resource(EventQueue<A, T> *q) : mQ(q) {}
 
   EventQueue<A, T> *mQ;
 };
 
-#endif // RESOURCEHANDLE_H
+#endif // RESOURCE_H

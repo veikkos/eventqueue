@@ -29,7 +29,7 @@ $ make tests
   const ResourceAttr<std::string> attr("speed");
 
   // Create a resource which provides "speed"
-  ResourceHandle<std::string, unsigned int> *handle = q.provide(attr);
+  Resource<std::string, unsigned int> *handle = q.provide(attr);
 
   // Create listener which listens to "speed"
   ResourceListener<std::string, unsigned int> listener(
